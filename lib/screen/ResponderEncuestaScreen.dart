@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../model/encuesta_model.dart';
-import '../database/database_helper.dart'; // Importa tu clase DatabaseHelper
+import '../database/database_helper.dart';
 
 class ResponderEncuestaScreen extends StatefulWidget {
+  static const ruta = "responder";
+
   final Encuesta encuesta;
 
   ResponderEncuestaScreen({required this.encuesta});
@@ -40,10 +42,10 @@ class _ResponderEncuestaScreenState extends State<ResponderEncuestaScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: widget.encuesta.preguntas?.length,
+                itemCount: widget.encuesta.preguntas!.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(widget.encuesta.preguntas?[index].texto ?? ""),
+                    title: Text(widget.encuesta.preguntas![index].texto ?? ''),
                     subtitle: Text('Respuesta: ${_respuestas[index] ?? ""}'),
                     trailing: TextField(
                       onChanged: (value) {
@@ -57,12 +59,24 @@ class _ResponderEncuestaScreenState extends State<ResponderEncuestaScreen> {
                 },
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    // Regresar a la pantalla de encuestas
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: _guardarRespuestas,
+                  child: Text('Guardar'),
+                ),
+              ],
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _guardarRespuestas,
-        child: Icon(Icons.save),
       ),
     );
   }

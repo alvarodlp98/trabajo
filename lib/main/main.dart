@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Mi Encuesta App',
       initialRoute: GenerarEncuestaScreen.ruta,
       routes: {
-    GenerarEncuestaScreen.ruta:(context) => GenerarEncuestaScreen(),
-        '/responder': (context) => ResponderEncuestaScreen(encuesta: miEncuesta),
+        GenerarEncuestaScreen.ruta:(context) => GenerarEncuestaScreen(),
+        ResponderEncuestaScreen.ruta : (context) => ResponderEncuestaScreen(encuesta: miEncuesta),
       },
     );
   }

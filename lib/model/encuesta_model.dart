@@ -1,4 +1,10 @@
-// encuesta_model.dart
+class Respuesta {
+  int? id;
+  int preguntaId;
+  String? respuesta;
+
+  Respuesta({this.id, required this.preguntaId, this.respuesta});
+}
 
 class Encuesta {
   int? id;

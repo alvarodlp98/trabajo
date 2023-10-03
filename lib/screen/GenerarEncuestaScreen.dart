@@ -11,10 +11,10 @@ class GenerarEncuestaScreen extends StatefulWidget {
 
 class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
 
-  TextEditingController _nombreEncuestaController = TextEditingController();
-  List<Pregunta> _preguntas = [];
+  final TextEditingController _nombreEncuestaController = TextEditingController();
+  final List<Pregunta> _preguntas = [];
 
-  DatabaseHelper _databaseHelper = DatabaseHelper();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   void _agregarPregunta() {
     setState(() {
@@ -35,19 +35,19 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Generar Encuesta')),
+      appBar: AppBar(title: const Text('Generar Encuesta')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _nombreEncuestaController,
-              decoration: InputDecoration(labelText: 'Nombre de la encuesta'),
+              decoration: const InputDecoration(labelText: 'Nombre de la encuesta'),
             ),
             ElevatedButton(
               onPressed: _agregarPregunta,
-              child: Text('Agregar pregunta'),
+              child: const Text('Agregar pregunta'),
             ),
             Expanded(
               child: ListView.builder(
@@ -68,7 +68,7 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
             ),
             ElevatedButton(
               onPressed: _guardarEncuesta,
-              child: Text('Guardar encuesta'),
+              child: const Text('Guardar encuesta'),
             ),
           ],
         ),

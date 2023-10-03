@@ -5,11 +5,11 @@ class DatabaseHelper {
   final PostgreSQLConnection _connection;
 
   DatabaseHelper({
-    String host = 'localhost',
+    String host = '	silly.db.elephantsql.com (silly-01)',
     int port = 5432,
-    String databaseName = 'postgres',
-    String username = 'postgres',
-    String password = '',
+    String databaseName = 'rmzdvhza',
+    String username = 'rmzdvhza',
+    String password = 'Ncf1ECn1sgBPrg1Nx6eTbgcP8nQwEg5m',
   }) : _connection = PostgreSQLConnection(
     host,
     port,
@@ -26,8 +26,9 @@ class DatabaseHelper {
     await _connection.close();
   }
 
-  Future<void> guardarEncuesta(String nombreEncuesta, List<Pregunta> preguntas) async {
-    await openConnection();
+  Future<void> guardarEncuesta(String nombreEncuesta,
+      List<Pregunta> preguntas) async {
+     openConnection();
 
     // Insertar la encuesta en la tabla 'encuestas'
     await _connection.query(
@@ -51,7 +52,8 @@ class DatabaseHelper {
           substitutionValues: {
             'encuestaId': encuestaId,
             'texto': preguntas[i].texto,
-            'obligatoria': preguntas[i].obligatoria != null && preguntas[i].obligatoria! ? 1 : 0,
+            'obligatoria': preguntas[i].obligatoria != null &&
+                preguntas[i].obligatoria! ? 1 : 0,
           },
         );
       }
@@ -60,7 +62,8 @@ class DatabaseHelper {
     await closeConnection();
   }
 
-  Future<void> guardarRespuestas(String nombreEncuesta, List<String?> respuestas) async {
+  Future<void> guardarRespuestas(String nombreEncuesta,
+      List<String?> respuestas) async {
     await openConnection();
 
     final encuestaIdResult = await _connection.query(
@@ -74,7 +77,11 @@ class DatabaseHelper {
       for (int i = 0; i < respuestas.length; i++) {
         await _connection.query(
           'INSERT INTO respuestas (encuesta_id, pregunta_index, respuesta) VALUES (@encuestaId, @preguntaIndex, @respuesta)',
-          substitutionValues: {'encuestaId': encuestaId, 'preguntaIndex': i, 'respuesta': respuestas[i]},
+          substitutionValues: {
+            'encuestaId': encuestaId,
+            'preguntaIndex': i,
+            'respuesta': respuestas[i]
+          },
         );
       }
     }
@@ -87,8 +94,46 @@ class DatabaseHelper {
     final result = await _connection.query('SELECT nombre FROM encuestas');
     await closeConnection();
 
-    final encuestas = result.map((row) => Encuesta(nombre: row[0] as String)).toList();
+    final encuestas = result.map((row) => Encuesta(nombre: row[0] as String))
+        .toList();
     return encuestas;
   }
 
+  void createDatabaseTables(PostgreSQLConnection connection) async {
+    await connection.query(
+      '''
+    CREATE TABLE IF NOT EXISTS encuestas (
+      id SERIAL PRIMARY KEY,
+      nombre TEXT
+    )
+    ''',
+    );
+
+
+    await connection.query(
+      '''
+    CREATE TABLE IF NOT EXISTS preguntas (
+      id SERIAL PRIMARY KEY,
+      encuesta_id INT,
+      texto TEXT,
+      obligatoria BOOLEAN,
+      FOREIGN KEY (encuesta_id) REFERENCES encuestas (id)
+    )
+    ''',
+    );
+
+
+    await connection.query(
+      '''
+    CREATE TABLE IF NOT EXISTS respuestas (
+      id SERIAL PRIMARY KEY,
+      encuesta_id INT,
+      pregunta_index INT,
+      respuesta TEXT,
+      FOREIGN KEY (encuesta_id) REFERENCES encuestas (id),
+      FOREIGN KEY (pregunta_index, encuesta_id) REFERENCES preguntas (id, encuesta_id)
+    )
+    ''',
+    );
+  }
 }

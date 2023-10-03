@@ -5,7 +5,7 @@ class DatabaseHelper {
   final PostgreSQLConnection _connection;
 
   DatabaseHelper({
-    String host = '	silly.db.elephantsql.com (silly-01)',
+    String host = 'silly.db.elephantsql.com (silly-01)',
     int port = 5432,
     String databaseName = 'rmzdvhza',
     String username = 'rmzdvhza',
@@ -47,7 +47,7 @@ class DatabaseHelper {
 
       // Insertar las preguntas asociadas a la encuesta en la tabla 'preguntas'
       for (int i = 0; i < preguntas.length; i++) {
-        await _connection.query(
+        await _connection.execute (
           'INSERT INTO preguntas (encuesta_id, texto, obligatoria) VALUES (@encuestaId, @texto, @obligatoria)',
           substitutionValues: {
             'encuestaId': encuestaId,

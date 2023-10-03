@@ -25,6 +25,7 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
   void _guardarEncuesta() async {
     String nombreEncuesta = _nombreEncuestaController.text;
 
+
     await _databaseHelper.guardarEncuesta(nombreEncuesta, _preguntas);
 
     _nombreEncuestaController.clear();

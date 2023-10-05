@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../model/encuesta_model.dart';
 import '../database/database_helper.dart';
+import '../screen/ResponderEncuestaScreen.dart';
 
 
 class GenerarEncuestaScreen extends StatefulWidget {
@@ -24,13 +25,16 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
 
   void _guardarEncuesta() async {
     String nombreEncuesta = _nombreEncuestaController.text;
+    await _databaseHelper.openConnection();
 
 
     await _databaseHelper.guardarEncuesta(nombreEncuesta, _preguntas);
 
     _nombreEncuestaController.clear();
     _preguntas.clear();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Encuesta guardada')));
+    await _databaseHelper.closeConnection();
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Encuesta guardada')));
   }
 
   @override
@@ -44,12 +48,14 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
           children: [
             TextField(
               controller: _nombreEncuestaController,
-              decoration: const InputDecoration(labelText: 'Nombre de la encuesta'),
+              decoration: const InputDecoration(
+                  labelText: 'Nombre de la encuesta'),
             ),
             ElevatedButton(
               onPressed: _agregarPregunta,
               child: const Text('Agregar pregunta'),
             ),
+            SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
                 itemCount: _preguntas.length,
@@ -57,23 +63,36 @@ class _GenerarEncuestaScreenState extends State<GenerarEncuestaScreen> {
                   return ListTile(
                     title: TextField(
                       onChanged: (value) => _preguntas[index].texto = value,
-                      decoration: InputDecoration(labelText: 'Pregunta ${index + 1}'),
+                      decoration: InputDecoration(
+                          labelText: 'Pregunta ${index + 1}'),
                     ),
                     trailing: Checkbox(
                       value: _preguntas[index].obligatoria,
-                      onChanged: (value) => setState(() => _preguntas[index].obligatoria = value),
+                      onChanged: (value) =>
+                          setState(() =>
+                          _preguntas[index].obligatoria = value),
                     ),
                   );
                 },
               ),
             ),
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _guardarEncuesta,
               child: const Text('Guardar encuesta'),
             ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, ResponderEncuestaScreen.ruta);
+              },
+              child: Text('Responder Encuesta'),
+            )
           ],
         ),
       ),
     );
   }
 }
+
+

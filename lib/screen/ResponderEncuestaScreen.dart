@@ -17,6 +17,7 @@ class _ResponderEncuestaScreenState extends State<ResponderEncuestaScreen> {
   List<String?> _respuestas = [];
   DatabaseHelper _databaseHelper = DatabaseHelper();
 
+
   @override
   void initState() {
     super.initState();
